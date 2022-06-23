@@ -11,8 +11,13 @@ import SwiftUI
 struct CameraView: UIViewControllerRepresentable {
     typealias UIViewControllerType = CameraViewController
     
+    var pointsProcessorHandler: (([CGPoint]) -> Void)?
+    
     func makeUIViewController(context: Context) -> CameraViewController {
-        CameraViewController()
+        let cameraViewController = CameraViewController()
+        cameraViewController.pointsProcessorHandler = pointsProcessorHandler
+        
+        return cameraViewController
     }
     
     func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {

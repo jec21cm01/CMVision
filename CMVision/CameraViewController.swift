@@ -21,6 +21,10 @@ final class CameraViewController: UIViewController {
         request.maximumHandCount = 2
         return request
     }()
+    
+    // ポイント処理
+    var pointsProcessorHandler: (([CGPoint]) -> Void)?
+    
     // 画面を読み込む時の処理(viewDidLoadより前）
     override func loadView() {
         // viewをCameraPreviewにする
@@ -100,6 +104,17 @@ final class CameraViewController: UIViewController {
         cameraFeedSession = session
         
     }
+    
+    func processPoints(_ fingerTips: [CGPoint]) {
+        let convertedPoints = fingerTips.map {
+            
+            // キャプチャの座標からlayerの座標に変換する
+            // キャプチャの座標とlayerの座標は異なる
+            cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
+        }
+        
+        pointsProcessorHandler?(convertedPoints)
+    }
 }
 
 // 動画情報からサンプルデータを取得して監視するデリゲート
@@ -107,6 +122,18 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // captureOutputが出力し終わった時
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        // 指先の座標
+        var fingerTips: [CGPoint] = []
+        // このメソッドを抜けるときに実行する処理を書くときに使うキーワードがdefer
+        // deferの中にあるものは、処理を抜ける時に実行する
+        defer {
+            DispatchQueue.main.sync {
+                
+                self.processPoints(fingerTips)
+            }
+        }
+        
         // リクエストを処理する
         let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: .up)
         
@@ -118,7 +145,48 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             guard let results = handPoseRequest.results?.prefix(2),
                   !results.isEmpty else { return }
             
-            print(results)
+            // 認識された座標
+            var recognizedPoints: [VNRecognizedPoint] = []
+            
+            // 手の検出結果から手の座標をとる
+            try results.forEach{ observation in
+                // 手から全ての指をとる（指は配列）
+                let fingers = try observation.recognizedPoints(.all)
+                
+                // 親指(thumbTip)のポイント
+                if let thumbTipPoint = fingers[.thumbTip] {
+                    recognizedPoints.append(thumbTipPoint)
+                }
+                // 人差し指(indexTip)のポイント
+                if let indexTipPoint = fingers[.indexTip] {
+                    recognizedPoints.append(indexTipPoint)
+                }
+                // 中指（middleTip)のポイント
+                if let middleTipPoint = fingers[.middleTip] {
+                    recognizedPoints.append(middleTipPoint)
+                }
+                // 薬指(ringTip）のポイント
+                if let ringTipPoint = fingers[.ringTip] {
+                    recognizedPoints.append(ringTipPoint)
+                }
+                // 小指(littleTip)のポイント
+                if let littleTipPoint = fingers[.littleTip] {
+                    recognizedPoints.append(littleTipPoint)
+                }
+            }
+            
+            
+            fingerTips = recognizedPoints.filter{ point in
+                // 精度の高い値のみ取得する
+                point.confidence > 0.9
+            }
+            .map { point in
+                // 座標の型変換
+                // Visionの座標は左下が原点。キャプチャは左上が原点。
+                // y座標のみ、逆位置にする
+                CGPoint(x: point.location.x, y: 1 - point.location.y)
+            }
+            
         } catch {
             // エラーが起きたらカメラを止める
             cameraFeedSession?.stopRunning()
