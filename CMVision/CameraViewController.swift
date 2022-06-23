@@ -7,12 +7,20 @@
 
 import UIKit
 import AVFoundation
+import Vision
 
 final class CameraViewController: UIViewController {
     
     private var cameraFeedSession: AVCaptureSession?
     private let videoDataOutputQueue = DispatchQueue(label: "camera", qos: .userInteractive)
     
+    // 手の検出
+    private let handPoseRequest: VNDetectHumanHandPoseRequest = {
+        let request = VNDetectHumanHandPoseRequest()
+        // 検出する手の数（2つ)
+        request.maximumHandCount = 2
+        return request
+    }()
     // 画面を読み込む時の処理(viewDidLoadより前）
     override func loadView() {
         // viewをCameraPreviewにする
@@ -97,4 +105,23 @@ final class CameraViewController: UIViewController {
 // 動画情報からサンプルデータを取得して監視するデリゲート
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
+    // captureOutputが出力し終わった時
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // リクエストを処理する
+        let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: .up)
+        
+        do {
+            // この解析が正常終了されなかったらerrorに行く
+            try handler.perform([handPoseRequest])
+            
+            // 手の検出結果（配列）から最初の2つをとる。（手が2つ以上ないから）
+            guard let results = handPoseRequest.results?.prefix(2),
+                  !results.isEmpty else { return }
+            
+            print(results)
+        } catch {
+            // エラーが起きたらカメラを止める
+            cameraFeedSession?.stopRunning()
+        }
+    }
 }
