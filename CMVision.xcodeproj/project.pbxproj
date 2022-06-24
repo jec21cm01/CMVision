@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E40161672864AC0300CE60A7 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40161642864AC0300CE60A7 /* CameraPreview.swift */; };
+		E40161682864AC0300CE60A7 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40161652864AC0300CE60A7 /* CameraView.swift */; };
+		E40161692864AC0300CE60A7 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40161662864AC0300CE60A7 /* CameraViewController.swift */; };
 		E4D5887C2864ABB90031F22D /* CMVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5887B2864ABB90031F22D /* CMVisionApp.swift */; };
 		E4D5887E2864ABB90031F22D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5887D2864ABB90031F22D /* ContentView.swift */; };
 		E4D588802864ABBA0031F22D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4D5887F2864ABBA0031F22D /* Assets.xcassets */; };
@@ -14,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E40161642864AC0300CE60A7 /* CameraPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		E40161652864AC0300CE60A7 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		E40161662864AC0300CE60A7 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E4D588782864ABB90031F22D /* CMVision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4D5887B2864ABB90031F22D /* CMVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMVisionApp.swift; sourceTree = "<group>"; };
 		E4D5887D2864ABB90031F22D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +59,9 @@
 			isa = PBXGroup;
 			children = (
 				E4D5887B2864ABB90031F22D /* CMVisionApp.swift */,
+				E40161642864AC0300CE60A7 /* CameraPreview.swift */,
+				E40161652864AC0300CE60A7 /* CameraView.swift */,
+				E40161662864AC0300CE60A7 /* CameraViewController.swift */,
 				E4D5887D2864ABB90031F22D /* ContentView.swift */,
 				E4D5887F2864ABBA0031F22D /* Assets.xcassets */,
 				E4D588842864ABBA0031F22D /* Info.plist */,
@@ -138,8 +147,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E40161672864AC0300CE60A7 /* CameraPreview.swift in Sources */,
+				E40161692864AC0300CE60A7 /* CameraViewController.swift in Sources */,
 				E4D5887E2864ABB90031F22D /* ContentView.swift in Sources */,
 				E4D5887C2864ABB90031F22D /* CMVisionApp.swift in Sources */,
+				E40161682864AC0300CE60A7 /* CameraView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
