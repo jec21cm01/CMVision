@@ -178,7 +178,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             
             fingerTips = recognizedPoints.filter{ point in
                 // 精度の高い値のみ取得する
-                point.confidence > 0.9
+                point.confidence > 0.88
             }
             .map { point in
                 // 座標の型変換
